@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Add Crop - SCMS{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h2>Add New Crop</h2>
+    <p style="color: var(--text-muted);">Enter the details of your new crop to start tracking.</p>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <form method="POST" action="{{ url_for('add_crop') }}">
+        <div class="form-group">
+            <label class="form-label" for="crop_name">Crop Type</label>
+            <select class="form-control" id="crop_name" name="crop_name" required onchange="updateDuration()">
+                <option value="" disabled selected>Select a crop</option>
+                <option value="Rice">Rice</option>
+                <option value="Wheat">Wheat</option>
+                <option value="Corn">Corn</option>
+                <option value="Soybeans">Soybeans</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="sowing_date">Sowing Date</label>
+            <input class="form-control" type="date" id="sowing_date" name="sowing_date" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="growth_duration_days">Growth Duration (Days)</label>
+            <input class="form-control" type="number" id="growth_duration_days" name="growth_duration_days" required min="1">
+            <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">Standard durations will be pre-filled for common crops.</small>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">Save Crop</button>
+            <a href="{{ url_for('dashboard') }}" class="btn" style="border: 1px solid var(--border-color); color: var(--text-main);">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Pre-fill standard grain durations
+    function updateDuration() {
+        const cropSelect = document.getElementById('crop_name');
+        const durationInput = document.getElementById('growth_duration_days');
+        
+        const durations = {
+            'Rice': 120,
+            'Wheat': 110,
+            'Corn': 100,
+            'Soybeans': 90
+        };
+        
+        const selectedCrop = cropSelect.value;
+        if (durations[selectedCrop]) {
+            durationInput.value = durations[selectedCrop];
+        } else {
+            durationInput.value = '';
+        }
+    }
+
+    // Set today's date as default for sowing date
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('sowing_date');
+        if (!dateInput.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+    });
+</script>
+{% endblock %}
