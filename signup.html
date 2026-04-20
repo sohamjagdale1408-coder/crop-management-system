@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - SCMS{% endblock %}
+
+{% block auth_content %}
+<div class="auth-content">
+    <div class="card auth-card">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <i class="ph-fill ph-plant" style="font-size: 3rem; color: var(--primary-color);"></i>
+            <h2 style="margin-top: 0.5rem;">Create Account</h2>
+            <p style="color: var(--text-muted);">Join the Smart Crop Management System</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('signup') }}">
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign Up</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
+            Already have an account? <a href="{{ url_for('login') }}">Log in here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
