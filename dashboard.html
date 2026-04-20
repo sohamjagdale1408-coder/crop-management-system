@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SCMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Dashboard</h2>
+    <a href="{{ url_for('add_crop') }}" class="btn btn-primary"><i class="ph ph-plus"></i> New Crop</a>
+</div>
+
+{% if crops %}
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3 class="card-title">Total Active Crops</h3>
+            <div class="card-value">{{ crops|length }}</div>
+        </div>
+        <div class="card">
+            <h3 class="card-title">Total Investment</h3>
+            <div class="card-value">${{ "%.2f"|format(total_investment) }}</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1rem;">Active Crops</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Crop Name</th>
+                        <th>Sowing Date</th>
+                        <th>Expected Harvest</th>
+                        <th>Investment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in crops %}
+                    <tr>
+                        <td style="font-weight: 500;">{{ item.crop.crop_name }}</td>
+                        <td>{{ item.crop.sowing_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ item.expected_harvest.strftime('%Y-%m-%d') }}</td>
+                        <td>${{ "%.2f"|format(item.total_cost) }}</td>
+                        <td>
+                            {% if item.status == 'Ready' %}
+                                <span class="badge badge-ready">Ready</span>
+                            {% else %}
+                                <span class="badge badge-growing">Growing</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('crop_details', crop_id=item.crop.id) }}" style="font-weight: 500;">Manage <i class="ph ph-arrow-right"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="ph ph-plant"></i>
+        </div>
+        <h3>No active crops</h3>
+        <p>You haven't added any crops to track yet. Get started by adding your first crop.</p>
+        <a href="{{ url_for('add_crop') }}" class="btn btn-primary">Add Your First Crop</a>
+    </div>
+{% endif %}
+
+{% endblock %}
